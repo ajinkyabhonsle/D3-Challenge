@@ -13,14 +13,14 @@
 // var height = svgHeight - margin.top - margin.bottom;
 
 let width = parseInt(d3.select("#scatter").style("width"))
-let height = width - width / 3.9;
+let height = width - width / 3.9
 
-let margin = 50;
+let margin = 40
 
-let labelArea = 110;
+let labelArea = 110
 
-let topPadBottom = 10;
-let topPadLeft = 10;
+let topPadBottom = 40
+let topPadLeft = 40
 
 
 var svg = d3.select("#scatter")
@@ -36,9 +36,9 @@ var chartGroup = svg
 var circleRadius;
 function GetCircle(){
     if(width <= 530){
-        circleRadius = 5;
-    } else {
         circleRadius = 10;
+    } else {
+        circleRadius = 11;
     }
 }
 
@@ -86,7 +86,7 @@ xText.append("text")
     .text("Household Income (Median)")
 
 
-let leftTextX = margin - topPadLeft;
+let leftTextX = margin + topPadLeft;
 let leftTextY = (height + labelArea) / 2 - labelArea;
 
 // Adding second lable group for axis left of the chart
@@ -232,12 +232,15 @@ function visualize(data){
 
     var theCircles = svg.selectAll("g theCircles").data(data).enter()
 
-    theCircles.append("circle").attr()
+    theCircles.append("circle")
             .attr("cx", function(d){
-            return xScale(d[curX])
-        }).attr("cy", function(d){
-            return yScale(d[curY])
-        }).attr("r", circleRadius)
+            return xScale(d[curX]);
+        })
+        .style("fill", "#69b3a2")
+        .attr("cy", function(d){
+            return yScale(d[curY]);
+        })
+        .attr("r", circleRadius)
         .attr("class", function(d){
             return "stateCircle" + d.abbr;
         })
@@ -254,8 +257,9 @@ function visualize(data){
         .text(function(d){
             return d.abbr
         }).attr("dx", function(d){
-            return xScale(d[curX]) 
+            return xScale(d[curX]) - (circleRadius / 1.0)
         })
+        
         .attr("dy",function(d){
             return yScale(d[curY]) + (circleRadius / 2.5)
         })
@@ -271,47 +275,47 @@ function visualize(data){
         })
 
     
-   d3.selectAll(".aText").on("click", function(){
-       var self = d3.select(this);
-       if(self.classed("inactive")){
-           var axis = self.attr("data-axis");
-           var name = self.attr("data-name");
+        d3.selectAll(".aText").on("click", function(){
+            var self = d3.select(this);
 
-           if(axis === "x"){
-               curX = name;
+            if(self.classed("inactive")){
+                    var axis = self.attr("data-axis");
+                    var name = self.attr("data-name");
 
-               xMinMax();
+                    if(axis === "x"){
+                        curX = name;
 
-               xScale.domain([xMin, xMax])
-               svg.select(".xAxis").transition().duration(300).call(xAxis);
+                        xMinMax();
 
-               d3.selectAll("circle").each(function(){
-                   d3.select(this)
-                   .transition
-                   .attr("cx",function(d){
-                       return xScale(d[curX])
-                   })
-                   .duration(300)
-            
-               })
-               d3.selectAll(".stateText").each(function(){
-                   d3.select(this)
-                   .transition
-                   .attr("dx", function(d){
-                       return xScale(d[curX])
-                   })
-                   .duration(300)
-               })
+                        xScale.domain([xMin, xMax])
+                        svg.select(".xAxis").transition().duration(300).call(xAxis);
 
-               labelChange(axis, self)
-
-
-           } else {
+                        d3.selectAll("circle").each(function(){
+                            d3.select(this)
+                            .transition()
+                            .attr("cx",function(d){
+                                return xScale(d[curX])
+                            })
+                            .duration(300)
+                        })
+                        d3.selectAll(".stateText").each(function(){
+                            d3.select(this)
+                            .transition()
+                            .attr("dx", function(d){
+                                return xScale(d[curX])
+                            })
+                            .duration(300)
+                        })
+                        labelChange(axis, self)
+                    
+               
+            } else {
                curY = name;
                yMinMax();
                yScale.domain([yMin,yMax]);
 
                svg.select(".yAxis").transition().duration(300).call(yAxis)
+               
                d3.selectAll("circle").each(function(){
                    d3.select(this)
                    .transition()
@@ -319,6 +323,7 @@ function visualize(data){
                        return yScale(d[curY]);
                    }).duration(300)
                })
+
                d3.selectAll(".stateText").each(function(){
                    d3.select(this)
                    .transition()
@@ -329,7 +334,7 @@ function visualize(data){
                })
 
                labelChange(axis, self)
-           }
+            }
        }
    });
 
